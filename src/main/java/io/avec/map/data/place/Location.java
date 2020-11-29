@@ -1,24 +1,23 @@
-package io.avec.map.place;
+package io.avec.map.data.place;
 
-import lombok.AllArgsConstructor;
+import io.avec.map.data.group.LocationGroup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Equals to Leaflet latlng
+ */
 @NoArgsConstructor
-@AllArgsConstructor
 @Setter
 @Getter
 @Entity
-public class Place {
+public class Location {
 
     @Id
     @GeneratedValue
@@ -26,7 +25,7 @@ public class Place {
 
     @NotNull
     @Column(unique = true)
-    private String place;
+    private String locationName;
 
     private String description;
 
@@ -36,6 +35,15 @@ public class Place {
     @NotNull
     private double lat;
 
+    @ManyToOne//(fetch = FetchType.LAZY)
+    private LocationGroup locationGroup;
+
+    public Location(@NotNull String locationName, String description, @NotNull double lat, @NotNull double lon) {
+        this.locationName = locationName;
+        this.description = description;
+        this.lon = lon;
+        this.lat = lat;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -43,14 +51,14 @@ public class Place {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        Place place1 = (Place) o;
+        Location location1 = (Location) o;
 
         return new EqualsBuilder()
-                .append(lon, place1.lon)
-                .append(lat, place1.lat)
-                .append(id, place1.id)
-                .append(place, place1.place)
-                .append(description, place1.description)
+                .append(lon, location1.lon)
+                .append(lat, location1.lat)
+                .append(id, location1.id)
+                .append(locationName, location1.locationName)
+                .append(description, location1.description)
                 .isEquals();
     }
 
@@ -58,7 +66,7 @@ public class Place {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(place)
+                .append(locationName)
                 .append(description)
                 .append(lon)
                 .append(lat)

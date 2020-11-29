@@ -27,7 +27,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
 import io.avec.map.main.MainView;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@RouteAlias(value = "", layout = MainView.class) // default
+//@RouteAlias(value = "", layout = MainView.class) // default
 @Route(value = "map", layout = MainView.class)
 @PageTitle("Map")
 @CssImport("./styles/views/map/map-view.css")

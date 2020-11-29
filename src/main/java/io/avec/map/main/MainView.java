@@ -20,6 +20,7 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import io.avec.map.map.MapView;
+import io.avec.map.map.MapView2;
 
 import java.util.Optional;
 
@@ -83,6 +84,7 @@ public class MainView extends AppLayout {
 
     private Component[] createMenuItems() {
         return new Tab[] {
+                createTab("Map2", MapView2.class),
                 createTab("Map", MapView.class)
         };
     }
