@@ -8,6 +8,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,16 +29,16 @@ public class DataGenerator {
             );
 
             // Hotels
-            locationGroups.get(0).addPlace(new Location("Comfort Hotel Karl Johan", "3-star Hotel", 59.91196666927608, 10.746121956821368));
+            locationGroups.get(0).addPlace(new Location("Comfort Hotel Karl Johan", "3-star Hotel", LocalDate.of(2019,1,1), 59.91196666927608, 10.746121956821368));
 
             // Museums
-            locationGroups.get(1).addPlace(new Location("Astrup Fearnley", "Museum of Modern Art", 59.90724956454675, 10.721575319314997));
-            locationGroups.get(1).addPlace(new Location("Historical Museum", "Collection of international antiquities", 59.91691529230013, 10.735482389023014));
+            locationGroups.get(1).addPlace(new Location("Astrup Fearnley", "Museum of Modern Art", LocalDate.of(2019,1,1), 59.90724956454675, 10.721575319314997));
+            locationGroups.get(1).addPlace(new Location("Historical Museum", "Collection of international antiquities", LocalDate.of(2019,1,2), 59.91691529230013, 10.735482389023014));
 
             // Restaurants
-            locationGroups.get(2).addPlace(new Location("Jaipur Restaurant", "Jaipur Indisk Restaurant", 59.912786996692724, 10.741708582461488));
-            locationGroups.get(2).addPlace(new Location("Habibi restaurant og kafé", "", 59.913583013270376, 10.749261682853477));
-            locationGroups.get(2).addPlace(new Location("Grand Café Oslo", "", 59.91394336585766, 10.73900491562362));
+            locationGroups.get(2).addPlace(new Location("Jaipur Restaurant", "Jaipur Indisk Restaurant", LocalDate.of(2019,1,1), 59.912786996692724, 10.741708582461488));
+            locationGroups.get(2).addPlace(new Location("Habibi restaurant og kafé", "", LocalDate.of(2019,1,2), 59.913583013270376, 10.749261682853477));
+            locationGroups.get(2).addPlace(new Location("Grand Café Oslo", "", LocalDate.of(2019,1,3), 59.91394336585766, 10.73900491562362));
 
             // Save all
             groupRepository.saveAll(locationGroups);

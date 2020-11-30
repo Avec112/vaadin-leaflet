@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Equals to Leaflet latlng
@@ -30,6 +32,9 @@ public class Location {
     private String description;
 
     @NotNull
+    private LocalDate localDate;
+
+    @NotNull
     private double lon;
 
     @NotNull
@@ -38,9 +43,10 @@ public class Location {
     @ManyToOne//(fetch = FetchType.LAZY)
     private LocationGroup locationGroup;
 
-    public Location(@NotNull String locationName, String description, @NotNull double lat, @NotNull double lon) {
+    public Location(@NotNull String locationName, String description, @NotNull LocalDate localDate, @NotNull double lat, @NotNull double lon) {
         this.locationName = locationName;
         this.description = description;
+        this.localDate = localDate;
         this.lon = lon;
         this.lat = lat;
     }

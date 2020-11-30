@@ -24,6 +24,7 @@ import io.avec.map.main.MainView;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -81,6 +82,10 @@ public class MapView2 extends Div {
         for (Location location: locations) {
            Marker marker = new Marker(LatLng.latlng(location.getLat(), location.getLon()));
            marker.setIcon(hotelIcon);
+            final String date = location.getLocalDate().format(DateTimeFormatter.ISO_DATE);
+            marker.setTitle("Title: " + date);
+            marker.setTooltipContent("Tooltip: " + date);
+            marker.bindPopup("Popup: " + date);
            marker.addTo(layerGroup);
         }
 
@@ -104,7 +109,7 @@ public class MapView2 extends Div {
         options.setCenter(oslo);
         options.setMinZoom(2);
         options.setMaxZoom(18);
-        options.setZoom(7);
+        options.setZoom(12);
 
         map = new LeafletMap(options );
         // OSM: Uses Spherical Mercator projection aka EPSG:3857
