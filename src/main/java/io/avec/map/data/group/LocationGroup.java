@@ -35,11 +35,11 @@ public class LocationGroup {
     @NotNull
     private LocationGroupType locationGroupType;
 
-    @ManyToOne
+    @ManyToOne//(fetch = FetchType.LAZY) // EAGER is default
     private Vacation vacation;
 
     @OneToMany(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.EAGER, // LAZY is default
             mappedBy = "locationGroup",
             cascade = CascadeType.ALL
     )

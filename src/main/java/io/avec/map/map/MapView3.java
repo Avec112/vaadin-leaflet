@@ -13,6 +13,7 @@ import com.vaadin.addon.leaflet4vaadin.types.LatLng;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
@@ -22,7 +23,6 @@ import io.avec.map.data.vacation.Vacation;
 import io.avec.map.data.vacation.VacationRepository;
 import io.avec.map.main.MainView;
 import io.avec.map.util.MapIcon;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.format.DateTimeFormatter;
@@ -37,11 +37,11 @@ public class MapView3 extends Div {
 
     private final LatLng oslo = new LatLng(59.914800, 10.749178);
     private LeafletMap map;
-    private final VacationRepository vacationRepository;
-
-    @SneakyThrows
+//    private final VacationRepository vacationRepository;
+    private final ListDataProvider<Vacation> dataProvider;
     public MapView3(VacationRepository vacationRepository) {
-        this.vacationRepository = vacationRepository;
+//        this.vacationRepository = vacationRepository;
+        dataProvider = new ListDataProvider<>(vacationRepository.findAll());
         setId("map-view");
         setSizeFull();
 
@@ -74,16 +74,19 @@ public class MapView3 extends Div {
         TileLayer image = new TileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
         layersControl.addBaseLayer(image, "Satellite");
 
-
-        for(Vacation vacation: vacationRepository.findAll()) {
+       // final List<Vacation> vacations = vacationRepository.findAll();
+//        for(Vacation vacation: vacations) {
+        for(Vacation vacation: dataProvider.getItems()) {
             LayersControl lc = createLayersControl(true);
 
-            for(LocationGroup locationGroup: vacation.getLocationGroups()) {
+
+            final List<LocationGroup> locationGroups = vacation.getLocationGroups();
+            for(LocationGroup locationGroup: locationGroups) {
                 switch (locationGroup.getLocationGroupType()) {
                     case HOTEL -> lc.addOverlay(createLayerGroup(MapIcon.HOTEL, locationGroup), "Hotel");
                     case RESTAURANT -> lc.addOverlay(createLayerGroup(MapIcon.RESTURANT, locationGroup), "Restaurant");
                     case MUSEUM -> lc.addOverlay(createLayerGroup(MapIcon.MUSEUM, locationGroup), "Museum");
-                    default -> log.warn("We have a unhandled LocationGroupType");
+                    default -> log.warn("We have an unhandled LocationGroupType");
                 }
             }
         }
@@ -93,8 +96,8 @@ public class MapView3 extends Div {
         Icon icon = new Icon(mapIcon.getPath());
 
         LayerGroup layerGroup = new LayerGroup();
-        final List<Location> locations = locationGroup.getLocations();
-        for (Location location: locations) {
+        layerGroup.setAttribution("Test setAttribution(..)");
+        for (Location location: locationGroup.getLocations()) {
             Marker marker = new Marker(LatLng.latlng(location.getLat(), location.getLon()));
             marker.setIcon(icon);
             final String date = location.getLocalDate().format(DateTimeFormatter.ISO_DATE);
@@ -115,6 +118,7 @@ public class MapView3 extends Div {
         LayersControlOptions layersControlOptions = new LayersControlOptions();
         layersControlOptions.setCollapsed(isCollapsed);
         LayersControl layersControl = new LayersControl(layersControlOptions);
+
         layersControl.addTo(map);
         return layersControl;
     }

@@ -1,5 +1,6 @@
 package io.avec.map.data.vacation;
 
+import io.avec.map.data.Auditable;
 import io.avec.map.data.group.LocationGroup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Vacation {
+public class Vacation extends Auditable<String> {
 
     @Id
     @GeneratedValue
@@ -29,11 +30,11 @@ public class Vacation {
     private String description;
 
     @OneToMany(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.EAGER, // LAZY is default
             mappedBy = "vacation",
             cascade = CascadeType.ALL
     )
-    private List<LocationGroup> locationGroups = new ArrayList<>();
+    private List<LocationGroup> locationGroups = new ArrayList<>(); // set for ManyToMany
 
     public Vacation(@NotNull String name, @NotNull String description) {
         this.name = name;

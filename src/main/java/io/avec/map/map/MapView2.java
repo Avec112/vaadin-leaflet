@@ -8,7 +8,6 @@ import com.vaadin.addon.leaflet4vaadin.layer.map.options.DefaultMapOptions;
 import com.vaadin.addon.leaflet4vaadin.layer.map.options.MapOptions;
 import com.vaadin.addon.leaflet4vaadin.layer.raster.TileLayer;
 import com.vaadin.addon.leaflet4vaadin.layer.ui.marker.Marker;
-import com.vaadin.addon.leaflet4vaadin.layer.ui.popup.Popup;
 import com.vaadin.addon.leaflet4vaadin.types.Icon;
 import com.vaadin.addon.leaflet4vaadin.types.LatLng;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -16,13 +15,12 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
-import io.avec.map.util.MapIcon;
-import io.avec.map.data.group.LocationGroupRepository;
 import io.avec.map.data.group.LocationGroup;
+import io.avec.map.data.group.LocationGroupRepository;
 import io.avec.map.data.group.LocationGroupType;
 import io.avec.map.data.place.Location;
 import io.avec.map.main.MainView;
+import io.avec.map.util.MapIcon;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,8 +88,7 @@ public class MapView2 extends Div {
         final List<LocationGroup> locationGroups = locationGroupRepository.findLocationGroupByLocationGroupType(locationGroupType);
         LayerGroup layerGroup = new LayerGroup();
         final LocationGroup locationGroup = locationGroups.get(0);// there is only one for now
-        final List<Location> locations = locationGroup.getLocations();
-        for (Location location: locations) {
+        for (Location location: locationGroup.getLocations()) {
             Marker marker = new Marker(LatLng.latlng(location.getLat(), location.getLon()));
             marker.setIcon(icon);
             final String date = location.getLocalDate().format(DateTimeFormatter.ISO_DATE);

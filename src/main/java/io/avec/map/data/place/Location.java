@@ -7,10 +7,12 @@ import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * Equals to Leaflet latlng
@@ -39,7 +41,7 @@ public class Location {
     @NotNull
     private double lat;
 
-    @ManyToOne//(fetch = FetchType.LAZY)
+    @ManyToOne//(fetch = FetchType.LAZY) // EAGER is default
     private LocationGroup locationGroup;
 
     public Location(@NotNull String locationName, String description, @NotNull LocalDate localDate, @NotNull double lat, @NotNull double lon) {

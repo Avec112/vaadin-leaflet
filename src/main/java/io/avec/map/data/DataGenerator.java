@@ -1,7 +1,6 @@
 package io.avec.map.data;
 
 import io.avec.map.data.group.LocationGroup;
-import io.avec.map.data.group.LocationGroupRepository;
 import io.avec.map.data.group.LocationGroupType;
 import io.avec.map.data.place.Location;
 import io.avec.map.data.vacation.Vacation;
@@ -11,8 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

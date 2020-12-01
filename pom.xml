@@ -144,12 +144,12 @@
             <artifactId>hibernate-validator</artifactId>
         </dependency>
 
-        <dependency>
-            <!-- Comment if using ex. JRebel -->
+       <!-- <dependency>
+            &lt;!&ndash; Comment if using ex. JRebel &ndash;&gt;
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-        </dependency>
+        </dependency>-->
 <!--        <dependency>-->
 <!--            <groupId>com.vaadin</groupId>-->
 <!--            <artifactId>vaadin-testbench</artifactId>-->
