@@ -26,7 +26,6 @@ public class Location {
     private Long id;
 
     @NotNull
-    @Column(unique = true)
     private String locationName;
 
     private String description;

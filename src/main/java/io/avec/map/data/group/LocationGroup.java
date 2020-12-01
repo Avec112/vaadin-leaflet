@@ -1,6 +1,7 @@
 package io.avec.map.data.group;
 
 import io.avec.map.data.place.Location;
+import io.avec.map.data.vacation.Vacation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +26,17 @@ public class LocationGroup {
     @GeneratedValue
     private Long id;
 
-    private String groupName;
+    @NotNull
+    private String name;
+
+    @NotNull
     private String description;
+
+    @NotNull
     private LocationGroupType locationGroupType;
+
+    @ManyToOne
+    private Vacation vacation;
 
     @OneToMany(
             fetch = FetchType.EAGER,
@@ -35,8 +45,8 @@ public class LocationGroup {
     )
     private List<Location> locations = new ArrayList<>();
 
-    public LocationGroup(String groupName, String description, LocationGroupType locationGroupType) {
-        this.groupName = groupName;
+    public LocationGroup(@NotNull String name, @NotNull String description, @NotNull LocationGroupType locationGroupType) {
+        this.name = name;
         this.description = description;
         this.locationGroupType = locationGroupType;
     }
@@ -61,7 +71,7 @@ public class LocationGroup {
 
         return new EqualsBuilder()
                 .append(id, locationGroup.id)
-                .append(groupName, locationGroup.groupName)
+                .append(name, locationGroup.name)
                 .append(description, locationGroup.description)
                 .append(locationGroupType, locationGroup.locationGroupType)
                 .isEquals();
@@ -71,9 +81,10 @@ public class LocationGroup {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(groupName)
+                .append(name)
                 .append(description)
                 .append(locationGroupType)
                 .toHashCode();
     }
+
 }

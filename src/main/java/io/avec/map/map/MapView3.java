@@ -8,7 +8,6 @@ import com.vaadin.addon.leaflet4vaadin.layer.map.options.DefaultMapOptions;
 import com.vaadin.addon.leaflet4vaadin.layer.map.options.MapOptions;
 import com.vaadin.addon.leaflet4vaadin.layer.raster.TileLayer;
 import com.vaadin.addon.leaflet4vaadin.layer.ui.marker.Marker;
-import com.vaadin.addon.leaflet4vaadin.layer.ui.popup.Popup;
 import com.vaadin.addon.leaflet4vaadin.types.Icon;
 import com.vaadin.addon.leaflet4vaadin.types.LatLng;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -17,12 +16,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
-import io.avec.map.util.MapIcon;
-import io.avec.map.data.group.LocationGroupRepository;
 import io.avec.map.data.group.LocationGroup;
-import io.avec.map.data.group.LocationGroupType;
 import io.avec.map.data.place.Location;
+import io.avec.map.data.vacation.Vacation;
+import io.avec.map.data.vacation.VacationRepository;
 import io.avec.map.main.MainView;
+import io.avec.map.util.MapIcon;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,19 +29,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
-//@RouteAlias(value = "", layout = MainView.class) // default
-@Route(value = "map2", layout = MainView.class)
-@PageTitle("Map2")
+@RouteAlias(value = "", layout = MainView.class) // default
+@Route(value = "map3", layout = MainView.class)
+@PageTitle("Map3")
 @CssImport("./styles/views/map/map-view.css")
-public class MapView2 extends Div {
+public class MapView3 extends Div {
 
     private final LatLng oslo = new LatLng(59.914800, 10.749178);
     private LeafletMap map;
-    private final LocationGroupRepository locationGroupRepository;
+    private final VacationRepository vacationRepository;
 
     @SneakyThrows
-    public MapView2(LocationGroupRepository locationGroupRepository) {
-        this.locationGroupRepository = locationGroupRepository;
+    public MapView3(VacationRepository vacationRepository) {
+        this.vacationRepository = vacationRepository;
         setId("map-view");
         setSizeFull();
 
@@ -63,7 +62,7 @@ public class MapView2 extends Div {
     }
 
     private void addLayers() {
-        LayersControl layersControl = createLayersControl();
+        LayersControl layersControl = createLayersControl(false);
         layersControl.addTo(map);
 
         TileLayer osm = new TileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
@@ -75,21 +74,25 @@ public class MapView2 extends Div {
         TileLayer image = new TileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}");
         layersControl.addBaseLayer(image, "Satellite");
 
-        LayerGroup hotelGroup = createLayersGroups(MapIcon.HOTEL, LocationGroupType.HOTEL);
-        LayerGroup resturantGroup = createLayersGroups(MapIcon.RESTURANT, LocationGroupType.RESTAURANT);
-        LayerGroup museumGroup = createLayersGroups(MapIcon.MUSEUM, LocationGroupType.MUSEUM);
-        layersControl.addOverlay(hotelGroup, "Hotel");
-        layersControl.addOverlay(resturantGroup, "Restaurant");
-        layersControl.addOverlay(museumGroup, "Museum");
+
+        for(Vacation vacation: vacationRepository.findAll()) {
+            LayersControl lc = createLayersControl(true);
+
+            for(LocationGroup locationGroup: vacation.getLocationGroups()) {
+                switch (locationGroup.getLocationGroupType()) {
+                    case HOTEL -> lc.addOverlay(createLayerGroup(MapIcon.HOTEL, locationGroup), "Hotel");
+                    case RESTAURANT -> lc.addOverlay(createLayerGroup(MapIcon.RESTURANT, locationGroup), "Restaurant");
+                    case MUSEUM -> lc.addOverlay(createLayerGroup(MapIcon.MUSEUM, locationGroup), "Museum");
+                    default -> log.warn("We have a unhandled LocationGroupType");
+                }
+            }
+        }
     }
 
-    private LayerGroup createLayersGroups(MapIcon mapIcon, LocationGroupType locationGroupType) {
+    private LayerGroup createLayerGroup(MapIcon mapIcon, LocationGroup locationGroup) {
         Icon icon = new Icon(mapIcon.getPath());
 
-        // TODO need to have a parent in the future
-        final List<LocationGroup> locationGroups = locationGroupRepository.findLocationGroupByLocationGroupType(locationGroupType);
         LayerGroup layerGroup = new LayerGroup();
-        final LocationGroup locationGroup = locationGroups.get(0);// there is only one for now
         final List<Location> locations = locationGroup.getLocations();
         for (Location location: locations) {
             Marker marker = new Marker(LatLng.latlng(location.getLat(), location.getLon()));
@@ -106,11 +109,11 @@ public class MapView2 extends Div {
     }
 
 
-    private LayersControl createLayersControl() {
+    private LayersControl createLayersControl(boolean isCollapsed) {
         // Initialize the layers control
 
         LayersControlOptions layersControlOptions = new LayersControlOptions();
-        layersControlOptions.setCollapsed(false);
+        layersControlOptions.setCollapsed(isCollapsed);
         LayersControl layersControl = new LayersControl(layersControlOptions);
         layersControl.addTo(map);
         return layersControl;
